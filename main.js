@@ -145,6 +145,38 @@ const tick = () => {
         stayingMesh.position.x = meshCenter.x + offsetX / 2;
         stayingMesh.position.z = meshCenter.z + offsetZ / 2;
 
+        // create the mesh that falls
+        let fallingSizeX = meshSize.x - newSizeX;
+        let fallingSizeZ = meshSize.z - newSizeZ;
+
+        if (currentStackHeight % 2 === 0) {
+            fallingSizeZ = meshSize.z;
+        } else {
+            fallingSizeX = meshSize.x;
+        }
+
+        const fallingMesh = new THREE.Mesh(
+            new THREE.BoxGeometry(fallingSizeX, 4, fallingSizeZ),
+            currentStackMesh.material
+        );
+
+        fallingMesh.position.y = currentStackHeight * 4;
+
+        // find the appropriate x and z position for it
+        fallingMesh.position.x = currentStackMesh.position.x + offsetX / 2;
+        fallingMesh.position.z = currentStackMesh.position.z + offsetZ / 2;
+
+        scene.add(fallingMesh);
+
+        // make the falling mesh fall
+        gsap.to(fallingMesh.position, {
+            y: fallingMesh.position.y - 4,
+            duration: 1,
+            onComplete: () => {
+                scene.remove(fallingMesh);
+            },
+        });
+
         // update the mesh center
         meshCenter.x = stayingMesh.position.x;
         meshCenter.z = stayingMesh.position.z;
