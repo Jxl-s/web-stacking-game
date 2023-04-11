@@ -63,7 +63,7 @@ const tick = () => {
         const timeElapsed = clock.getElapsedTime();
         gsap.to(camera.position, {
             x: Math.sin(timeElapsed) * 60,
-            y: Math.abs(Math.sin(timeElapsed) * 60),
+            y: Math.abs(Math.sin(timeElapsed) * currentStackHeight * 8),
             z: Math.cos(timeElapsed) * 60,
             duration: 1,
         });
@@ -78,9 +78,15 @@ const tick = () => {
             material: new THREE.MeshMatcapMaterial({
                 matcap: matcapTexture,
                 // random color
-                color: Math.floor(Math.random() * 16777215),
+                color: new THREE.Color(
+                    Math.random() * 0.5 + 0.5,
+                    Math.random() * 0.5 + 0.5,
+                    Math.random() * 0.5 + 0.5
+                ),
             }),
         };
+
+        console.log(stack.material.color);
 
         currentStackMesh = new THREE.Mesh(stack.geometry, stack.material);
         currentStackMesh.position.y = currentStackHeight * 4;
@@ -217,7 +223,7 @@ scene.add(stackBaseMesh);
 camera.position.x = 30;
 camera.position.y = 60;
 camera.position.z = 30;
-camera.lookAt(0, 0, 0);
+// camera.lookAt(0, 0, 0);
 
 // camera.lookAt(stackBaseMesh.position);
 
