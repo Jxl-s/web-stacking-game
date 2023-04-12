@@ -211,7 +211,7 @@ const tick = () => {
         meshSize.z = newSizeZ;
 
         gsap.to(camera.position, {
-            y: currentStackHeight * 4 + 20,
+            y: currentStackHeight * 8 + 40,
             duration: 0.25,
         });
 
@@ -244,7 +244,7 @@ const stackBaseMesh = new THREE.Mesh(stackBase.geometry, stackBase.material);
 scene.add(stackBaseMesh);
 
 camera.position.x = 30;
-camera.position.y = stackBaseMesh.position.y + 20;
+camera.position.y = stackBaseMesh.position.y + 40;
 camera.position.z = 30;
 
 // camera.lookAt(stackBaseMesh.position);
