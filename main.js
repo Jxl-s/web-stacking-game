@@ -12,7 +12,7 @@ const config = {
 if (window.location.hash === "#cheater") {
     const gui = new dat.GUI();
     gui.add(config, "cheat").name("Enable Hacks");
-    gui.add(config, "blockSpeed").min(0).max(100).step(1).name("Block Speed");
+    gui.add(config, "blockSpeed").min(0).max(1000).step(1).name("Block Speed");
 }
 
 const sizes = {
@@ -140,7 +140,7 @@ const tick = () => {
     const offsetZ = Math.floor(currentStackMesh.position.z - meshCenter.z);
 
     if (config.cheat) {
-        if (offsetX === 0 && offsetZ === 0) {
+        if (offsetX >= 0 && offsetZ >= 0) {
             mouseClicked = true;
         }
     }
@@ -197,7 +197,7 @@ const tick = () => {
         // make the falling mesh fall
         gsap.to(fallingMesh.position, {
             y: fallingMesh.position.y - 4,
-            duration: 1,
+            duration: 0.1,
             onComplete: () => {
                 scene.remove(fallingMesh);
             },
@@ -211,8 +211,8 @@ const tick = () => {
         meshSize.z = newSizeZ;
 
         gsap.to(camera.position, {
-            y: camera.position.y + 4,
-            duration: 0.5,
+            y: currentStackHeight * 4 + 20,
+            duration: 0.25,
         });
 
         scene.remove(currentStackMesh);
@@ -237,16 +237,15 @@ window.addEventListener("touchstart", () => {
 // Now make the base of the stack
 const stackBase = {
     geometry: new THREE.BoxGeometry(30, 4, 30),
-    material: new THREE.MeshBasicMaterial({ color: 0x00ff00 }),
+    material: new THREE.MeshMatcapMaterial({ matcap: matcapTexture }),
 };
 
 const stackBaseMesh = new THREE.Mesh(stackBase.geometry, stackBase.material);
 scene.add(stackBaseMesh);
 
 camera.position.x = 30;
-camera.position.y = 60;
+camera.position.y = stackBaseMesh.position.y + 20;
 camera.position.z = 30;
-// camera.lookAt(0, 0, 0);
 
 // camera.lookAt(stackBaseMesh.position);
 
