@@ -3,14 +3,16 @@ import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { gsap } from "gsap";
 import * as dat from "dat.gui";
 
-const hackSettings = {
+const config = {
     cheat: false,
+    blockSpeed: 50,
 };
 
 // only if the url has a #debug, show the gui
 if (window.location.hash === "#cheater") {
     const gui = new dat.GUI();
-    gui.add(hackSettings, "cheat");
+    gui.add(config, "cheat").name("Enable Hacks");
+    gui.add(config, "blockSpeed").min(0).max(100).step(1).name("Block Speed");
 }
 
 const sizes = {
@@ -72,15 +74,6 @@ const tick = () => {
     requestAnimationFrame(tick);
     orbitControls.update();
 
-    if (hackSettings.cheat && currentStackMesh) {
-        const offsetX = currentStackMesh.position.x - meshCenter.x;
-        const offsetZ = currentStackMesh.position.z - meshCenter.z;
-
-        if (Math.abs(offsetX) < 0.5 && Math.abs(offsetZ) < 0.5) {
-            mouseClicked = true;
-        }
-    }
-
     if (stopped) {
         score.innerText = "You lost at " + (currentStackHeight - 1) + " blocks";
 
@@ -128,9 +121,9 @@ const tick = () => {
     if (!stopped) {
         // make the stack move
         if (currentStackHeight % 2 === 0) {
-            currentStackMesh.position.x += delta * 50;
+            currentStackMesh.position.x += delta * config.blockSpeed;
         } else {
-            currentStackMesh.position.z += delta * 50;
+            currentStackMesh.position.z += delta * config.blockSpeed;
         }
 
         // make it lose if it goes out of bounds
@@ -143,12 +136,17 @@ const tick = () => {
         }
     }
 
+    const offsetX = Math.floor(currentStackMesh.position.x - meshCenter.x);
+    const offsetZ = Math.floor(currentStackMesh.position.z - meshCenter.z);
+
+    if (config.cheat) {
+        if (offsetX === 0 && offsetZ === 0) {
+            mouseClicked = true;
+        }
+    }
+
     if (mouseClicked && !stopped) {
         mouseClicked = false;
-
-        // get the offsets
-        const offsetX = currentStackMesh.position.x - meshCenter.x;
-        const offsetZ = currentStackMesh.position.z - meshCenter.z;
 
         // create two new meshes: one for the falling part and one for the part that stays
         const newSizeX = meshSize.x - Math.abs(offsetX);
