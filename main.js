@@ -63,7 +63,7 @@ const tick = () => {
         const timeElapsed = clock.getElapsedTime();
         gsap.to(camera.position, {
             x: Math.sin(timeElapsed) * 60,
-            y: Math.abs(Math.sin(timeElapsed) * currentStackHeight * 8),
+            y: Math.abs(Math.sin(timeElapsed) * currentStackHeight * 6),
             z: Math.cos(timeElapsed) * 60,
             duration: 1,
         });
