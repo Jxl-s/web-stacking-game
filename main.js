@@ -207,7 +207,11 @@ const tick = () => {
     window.requestAnimationFrame(tick);
 };
 
-window.addEventListener("keypress", (k) => {
+window.addEventListener("keypress", () => {
+    mouseClicked = true;
+});
+
+window.addEventListener("touchstart", () => {
     mouseClicked = true;
 });
 
