@@ -36,6 +36,7 @@ const renderer = new THREE.WebGLRenderer({
 
 renderer.setSize(sizes.width, sizes.height);
 renderer.render(scene, camera);
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
 window.addEventListener("resize", () => {
     sizes.width = window.innerWidth;
@@ -46,6 +47,7 @@ window.addEventListener("resize", () => {
 
     renderer.setSize(sizes.width, sizes.height);
     renderer.render(scene, camera);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 });
 
 const clock = new THREE.Clock(true);
