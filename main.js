@@ -1,6 +1,17 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { gsap } from "gsap";
+import * as dat from "dat.gui";
+
+const hackSettings = {
+    cheat: false,
+};
+
+// only if the url has a #debug, show the gui
+if (window.location.hash === "#cheater") {
+    const gui = new dat.GUI();
+    gui.add(hackSettings, "cheat");
+}
 
 const sizes = {
     width: window.innerWidth,
@@ -56,7 +67,18 @@ const meshCenter = {
 
 // gui.add(camera.position, "y", 0, 100, 0.1);
 const tick = () => {
+    requestAnimationFrame(tick);
     orbitControls.update();
+
+    if (hackSettings.cheat && currentStackMesh) {
+        const offsetX = currentStackMesh.position.x - meshCenter.x;
+        const offsetZ = currentStackMesh.position.z - meshCenter.z;
+
+        if (Math.abs(offsetX) < 0.5 && Math.abs(offsetZ) < 0.5) {
+            mouseClicked = true;
+        }
+    }
+
     if (stopped) {
         score.innerText = "You lost at " + (currentStackHeight - 1) + " blocks";
 
@@ -85,8 +107,6 @@ const tick = () => {
                 ),
             }),
         };
-
-        console.log(stack.material.color);
 
         currentStackMesh = new THREE.Mesh(stack.geometry, stack.material);
         currentStackMesh.position.y = currentStackHeight * 4;
@@ -137,7 +157,7 @@ const tick = () => {
         }
 
         if (stopped) {
-            return requestAnimationFrame(tick);
+            return;
         }
 
         const stayingMesh = new THREE.Mesh(
@@ -204,7 +224,6 @@ const tick = () => {
     }
 
     renderer.render(scene, camera);
-    window.requestAnimationFrame(tick);
 };
 
 window.addEventListener("keypress", () => {
