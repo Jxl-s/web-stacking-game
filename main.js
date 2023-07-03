@@ -211,9 +211,13 @@ const tick = () => {
         meshSize.z = newSizeZ;
 
         gsap.to(camera.position, {
-            y: currentStackHeight * 8 + 40,
+            y: currentStackHeight * 4 + 40,
             duration: 0.25,
         });
+
+        gsap.to(orbitControls.target, {
+            y: currentStackHeight * 4,
+        })
 
         scene.remove(currentStackMesh);
         currentStackMesh = null;
